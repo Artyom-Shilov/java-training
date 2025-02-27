@@ -1,6 +1,8 @@
 package com.shilov.repository;
 
 import com.shilov.common.enums.SpaceType;
+import com.shilov.common.exceptions.RepositoryException;
+import com.shilov.models.Reservation;
 import com.shilov.models.Space;
 import com.shilov.models.builders.SpaceBuilder;
 
@@ -10,10 +12,10 @@ import java.util.Random;
 
 public class ListBasedSpaceRepository implements SpaceRepository {
 
-    private List<Space> spaces;
+    private final List<Space> spaces;
 
     public ListBasedSpaceRepository() {
-        spaces = new ArrayList<Space>(generateInitialSpaces());
+        spaces = generateInitialSpaces();
     }
 
     private List<Space> generateInitialSpaces() {
@@ -36,22 +38,25 @@ public class ListBasedSpaceRepository implements SpaceRepository {
     }
 
     @Override
-    public Space getSpace(int spaceId) {
-        return null;
-    }
-
-    @Override
-    public List<Space> getAllSpaces() {
-        return List.of();
-    }
-
-    @Override
     public List<Space> getAvailableSpaces() {
-        return List.of();
+        return spaces.stream().filter(Space::isAvailable).toList();
     }
 
     @Override
-    public void deleteSpace(int spaceId) {
+    public void addSpace(Space space) throws RepositoryException {
+        spaces.add(space);
+    }
+
+    @Override
+    public void deleteSpace(Space space) throws RepositoryException {
+        Space spaceToDelete = spaces.stream()
+                .filter(r -> r.getId() == space.getId())
+                .findFirst().orElseThrow(() -> new RepositoryException("Failed to find space to delete by id"));
+        spaces.remove(spaceToDelete);
+    }
+
+    @Override
+    public void updateSpace(Space space) throws RepositoryException {
 
     }
 }

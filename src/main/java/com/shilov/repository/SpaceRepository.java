@@ -1,13 +1,14 @@
 package com.shilov.repository;
 
+import com.shilov.common.exceptions.RepositoryException;
 import com.shilov.models.Space;
 
 import java.util.List;
 
 public interface SpaceRepository {
 
-    Space getSpace(int spaceId);
-    List<Space> getAllSpaces();
-    List<Space> getAvailableSpaces();
-    void deleteSpace(int spaceId);
+    List<Space> getAvailableSpaces() throws RepositoryException;
+    void addSpace(Space space) throws RepositoryException;
+    void deleteSpace(Space space) throws RepositoryException;
+    void updateSpace(Space space) throws RepositoryException;
 }
