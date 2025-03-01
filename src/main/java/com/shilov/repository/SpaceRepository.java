@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface SpaceRepository {
 
-    List<Space> getAvailableSpaces() throws RepositoryException;
+    List<Space> getAllSpaces() throws RepositoryException;
     void addSpace(Space space) throws RepositoryException;
     void deleteSpace(Space space) throws RepositoryException;
-    void updateSpace(Space space) throws RepositoryException;
+    void updateSpace(String id, Space newData) throws RepositoryException;
 }

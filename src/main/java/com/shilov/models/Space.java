@@ -3,29 +3,24 @@ package com.shilov.models;
 import com.shilov.common.enums.SpaceType;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Space {
 
-    private int id;
+    private String id;
     private SpaceType type;
-    private boolean isAvailable;
-    private int price;
+    private int hourlyPrice;
 
     public Space() {}
 
-    public Space(int id, SpaceType type, boolean isAvailable, int price) {
-        this.id = id;
+    public Space(SpaceType type, int hourlyPrice) {
+        this.id = UUID.randomUUID().toString();
         this.type = type;
-        this.isAvailable = isAvailable;
-        this.price = price;
+        this.hourlyPrice = hourlyPrice;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public SpaceType getType() {
@@ -36,20 +31,12 @@ public class Space {
         this.type = type;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public int getHourlyPrice() {
+        return hourlyPrice;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
+    public void setHourlyPrice(int hourlyPrice) {
+        this.hourlyPrice = hourlyPrice;
     }
 
     @Override
@@ -57,21 +44,20 @@ public class Space {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Space space = (Space) o;
-        return id == space.id && isAvailable == space.isAvailable && price == space.price && type == space.type;
+        return hourlyPrice == space.hourlyPrice && Objects.equals(id, space.id) && type == space.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, isAvailable, price);
+        return Objects.hash(id, type, hourlyPrice);
     }
 
     @Override
     public String toString() {
         return "Space{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", type=" + type +
-                ", isAvailable=" + isAvailable +
-                ", price=" + price +
+                ", hourlyPrice=" + hourlyPrice +
                 '}';
     }
 }
