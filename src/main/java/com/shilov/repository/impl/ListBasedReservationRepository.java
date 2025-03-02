@@ -19,8 +19,14 @@ public class ListBasedReservationRepository implements ReservationRepository {
     }
 
     @Override
+    public Reservation getReservationById(String id) throws RepositoryException {
+        return reservations.stream().filter(r -> r.getId().equals(id)).findFirst()
+                .orElseThrow(() -> new RepositoryException("Reservation not found"));
+    }
+
+    @Override
     public List<Reservation> getReservationsByCustomer(User customer) throws RepositoryException {
-        return reservations.stream().filter((r) -> r.getCustomer().equals(customer)).toList();
+        return reservations.stream().filter(r -> r.getCustomer().equals(customer)).toList();
     }
 
     @Override
@@ -30,18 +36,18 @@ public class ListBasedReservationRepository implements ReservationRepository {
 
     @Override
     public void updateReservation(String id, Reservation newData) throws RepositoryException {
-        Reservation reservationToUpdate = reservations.stream().filter((r) -> r.getId().equals(id)).findFirst()
+        Reservation reservationToUpdate = reservations.stream().filter(r -> r.getId().equals(id)).findFirst()
                 .orElseThrow(() -> new RepositoryException("Failed to find reservation to update by id: " + id));
         reservations.set(reservations.indexOf(reservationToUpdate), newData);
     }
 
     @Override
     public List<Reservation> getReservationsIntersectedWithTimeRange(ReservationDateTime dateTimeForIntersection) {
-        Predicate<? super Reservation> timeIntersectionPredicate = (reservation) ->
+        Predicate<? super Reservation> timeIntersectionPredicate = reservation ->
                 !dateTimeForIntersection.getEndTime().isBefore(reservation.getReservationDateTime().getStartTime()) &&
                 ! dateTimeForIntersection.getStartTime().isAfter(reservation.getReservationDateTime().getEndTime());
         return reservations.stream()
-                .filter((r) -> r.getReservationDateTime().getDate().equals(dateTimeForIntersection.getDate()))
+                .filter(r -> r.getReservationDateTime().getDate().equals(dateTimeForIntersection.getDate()))
                 .filter(timeIntersectionPredicate)
                 .toList();
     }

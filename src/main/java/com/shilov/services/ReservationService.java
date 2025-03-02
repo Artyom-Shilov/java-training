@@ -14,4 +14,5 @@ public interface ReservationService {
     void makeReservation(Space space, User customer, ReservationDateTime reservationDateTime) throws ServiceException;
     List<Reservation> getAllReservations() throws ServiceException;
     List<Reservation> getUserReservations(User customer) throws ServiceException;
+    Reservation getReservationById(String reservationId) throws ServiceException;
 }

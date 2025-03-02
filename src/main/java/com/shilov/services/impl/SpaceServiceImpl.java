@@ -1,5 +1,6 @@
 package com.shilov.services.impl;
 
+import com.shilov.common.enums.ReservationStatus;
 import com.shilov.common.exceptions.RepositoryException;
 import com.shilov.common.exceptions.ServiceException;
 import com.shilov.models.Reservation;
@@ -31,9 +32,9 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
-    public void deleteSpace(Space space) throws ServiceException {
+    public void deleteSpace(String id) throws ServiceException {
         try {
-            spaceRepository.deleteSpace(space);
+            spaceRepository.deleteSpace(id);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -53,10 +54,21 @@ public class SpaceServiceImpl implements SpaceService {
         try {
             List<Space> spacesWithDateTimeIntersection = reservationRepository
                     .getReservationsIntersectedWithTimeRange(reservationDateTime)
-                    .stream().map(Reservation::getSpace).toList();
+                    .stream()
+                    .filter(r -> r.getStatus() == ReservationStatus.ACTIVE)
+                    .map(Reservation::getSpace).toList();
             List<Space> spaces = spaceRepository.getAllSpaces();
             spaces.removeAll(spacesWithDateTimeIntersection);
             return spaces;
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Space getSpaceById(String id) throws ServiceException {
+        try {
+            return spaceRepository.getSpaceById(id);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

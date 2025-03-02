@@ -1,6 +1,7 @@
 package com.shilov.services.impl;
 
 import com.shilov.common.enums.ReservationStatus;
+import com.shilov.common.enums.UserRole;
 import com.shilov.common.exceptions.RepositoryException;
 import com.shilov.common.exceptions.ServiceException;
 import com.shilov.models.Reservation;
@@ -25,11 +26,18 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void cancelReservation(Reservation reservation, User user) throws ServiceException {
+        validateUserForReservationCancel(user, reservation);
         reservation.setStatus(ReservationStatus.CANCELLED);
         try {
             reservationRepository.updateReservation(reservation.getId(), reservation);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
+        }
+    }
+
+    public void validateUserForReservationCancel(User user, Reservation reservation) throws ServiceException {
+        if (user.getRole() != UserRole.ADMIN || user.equals(reservation.getCustomer())) {
+            throw new ServiceException("User does have rights to cancel the reservation");
         }
     }
 
@@ -72,6 +80,15 @@ public class ReservationServiceImpl implements ReservationService {
     public List<Reservation> getUserReservations(User customer) throws ServiceException {
         try {
             return  reservationRepository.getReservationsByCustomer(customer);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Reservation getReservationById(String reservationId) throws ServiceException {
+        try {
+            return reservationRepository.getReservationById(reservationId);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

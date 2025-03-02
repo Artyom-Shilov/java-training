@@ -18,6 +18,10 @@ public class ReservationDateTime {
         this.date = date;
     }
 
+    public ReservationDateTime(String date, String startTime, String endTime) {
+        this(LocalDate.parse(date), LocalTime.parse(startTime), LocalTime.parse(endTime));
+    }
+
     public LocalTime getStartTime() {
         return startTime;
     }

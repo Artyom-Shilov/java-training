@@ -30,21 +30,27 @@ public class ListBasedSpaceRepository implements SpaceRepository {
     }
 
     @Override
+    public Space getSpaceById(String id) throws RepositoryException {
+        return spaces.stream().filter(space -> space.getId().equals(id)).findFirst()
+                .orElseThrow(() -> new RepositoryException("Space not found"));
+    }
+
+    @Override
     public void addSpace(Space space) {
         spaces.add(space);
     }
 
     @Override
-    public void deleteSpace(Space space) throws RepositoryException {
+    public void deleteSpace(String id) throws RepositoryException {
         Space spaceToDelete = spaces.stream()
-                .filter(r -> r.getId().equals(space.getId()))
-                .findFirst().orElseThrow(() -> new RepositoryException("Failed to find space to delete " + space));
+                .filter(r -> r.getId().equals(id))
+                .findFirst().orElseThrow(() -> new RepositoryException("Failed to find space to delete"));
         spaces.remove(spaceToDelete);
     }
 
     @Override
     public void updateSpace(String id, Space newData) throws RepositoryException {
-        Space spaceToUpdate = spaces.stream().filter((s) -> s.getId().equals(id)).findFirst()
+        Space spaceToUpdate = spaces.stream().filter(s -> s.getId().equals(id)).findFirst()
                 .orElseThrow(() -> new RepositoryException("Failed to find space to update by id: " + id));
         spaces.set(spaces.indexOf(spaceToUpdate), newData);
     }

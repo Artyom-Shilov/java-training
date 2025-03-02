@@ -10,6 +10,7 @@ import java.util.List;
 public interface ReservationRepository {
 
     List<Reservation> getAllReservations() throws  RepositoryException;
+    Reservation getReservationById(String id) throws  RepositoryException;
     List<Reservation> getReservationsByCustomer(User customer) throws  RepositoryException;
     void addReservation(Reservation reservation) throws  RepositoryException;
     void updateReservation(String id, Reservation newData) throws  RepositoryException;

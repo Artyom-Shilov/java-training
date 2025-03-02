@@ -23,6 +23,10 @@ public class Space {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public SpaceType getType() {
         return type;
     }
