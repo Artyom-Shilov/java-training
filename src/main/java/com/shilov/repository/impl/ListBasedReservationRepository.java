@@ -6,13 +6,16 @@ import com.shilov.models.ReservationDateTime;
 import com.shilov.models.User;
 import com.shilov.repository.ReservationRepository;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
 public class ListBasedReservationRepository implements ReservationRepository {
 
-    private final List<Reservation> reservations = new ArrayList<>();
+    private static final String SERIALIZATION_FILE_PATH = "src/main/resources/reservations.txt";
+
+    private List<Reservation> reservations = new ArrayList<>();
 
     public List<Reservation> getAllReservations() {
         return reservations;
@@ -25,7 +28,7 @@ public class ListBasedReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> getReservationsByCustomer(User customer) throws RepositoryException {
+    public List<Reservation> getReservationsByCustomer(User customer) {
         return reservations.stream().filter(r -> r.getCustomer().equals(customer)).toList();
     }
 
@@ -50,5 +53,25 @@ public class ListBasedReservationRepository implements ReservationRepository {
                 .filter(r -> r.getReservationDateTime().getDate().equals(dateTimeForIntersection.getDate()))
                 .filter(timeIntersectionPredicate)
                 .toList();
+    }
+
+    @Override
+    public void loadReservations() throws RepositoryException {
+        try (FileInputStream fileInputStream = new FileInputStream(SERIALIZATION_FILE_PATH);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            reservations = (ArrayList<Reservation>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    @Override
+    public void saveReservations() throws RepositoryException {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(SERIALIZATION_FILE_PATH);
+             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+            objectOutputStream.writeObject(reservations);
+        } catch (IOException e) {
+            throw new RepositoryException(e);
+        }
     }
 }

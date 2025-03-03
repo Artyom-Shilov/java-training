@@ -2,10 +2,11 @@ package com.shilov.models;
 
 import com.shilov.common.enums.SpaceType;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Space {
+public class Space implements Serializable {
 
     private String id;
     private SpaceType type;

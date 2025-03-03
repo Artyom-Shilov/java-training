@@ -13,4 +13,6 @@ public interface SpaceService {
     void updateSpace(String id, Space update) throws ServiceException;
     List<Space> getAvailableForReservationSpaces(ReservationDateTime reservationDateTime) throws ServiceException;
     Space getSpaceById(String id) throws ServiceException;
+    void saveSpaces() throws ServiceException;
+    void initSpaces() throws ServiceException;
 }

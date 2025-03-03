@@ -1,28 +1,18 @@
 package com.shilov.repository.impl;
 
-import com.shilov.common.enums.SpaceType;
 import com.shilov.common.exceptions.RepositoryException;
 import com.shilov.models.Space;
 import com.shilov.repository.SpaceRepository;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListBasedSpaceRepository implements SpaceRepository {
 
-    private final List<Space> spaces;
+    private static final String SERIALIZATION_FILE_PATH = "src/main/resources/spaces.txt";
 
-    public ListBasedSpaceRepository() {
-        spaces = initSpaces();
-    }
-
-    private List<Space> initSpaces() {
-        List<Space> result = new ArrayList<>();
-        result.add(new Space(SpaceType.ROOM, 1));
-        result.add(new Space(SpaceType.PRIVATE, 1));
-        result.add(new Space(SpaceType.OPEN, 2));
-        return result;
-    }
+    private List<Space> spaces = new ArrayList<>();
 
     @Override
     public List<Space> getAllSpaces() {
@@ -53,5 +43,25 @@ public class ListBasedSpaceRepository implements SpaceRepository {
         Space spaceToUpdate = spaces.stream().filter(s -> s.getId().equals(id)).findFirst()
                 .orElseThrow(() -> new RepositoryException("Failed to find space to update by id: " + id));
         spaces.set(spaces.indexOf(spaceToUpdate), newData);
+    }
+
+    @Override
+    public void loadSpaces() throws RepositoryException {
+        try (FileInputStream fileInputStream = new FileInputStream(SERIALIZATION_FILE_PATH);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            spaces = (ArrayList<Space>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    @Override
+    public void saveSpaces() throws RepositoryException {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(SERIALIZATION_FILE_PATH);
+             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+            objectOutputStream.writeObject(spaces);
+        } catch (IOException e) {
+            throw new RepositoryException(e);
+        }
     }
 }

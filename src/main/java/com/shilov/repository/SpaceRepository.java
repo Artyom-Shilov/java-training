@@ -12,4 +12,6 @@ public interface SpaceRepository {
     void addSpace(Space space) throws RepositoryException;
     void deleteSpace(String id) throws RepositoryException;
     void updateSpace(String id, Space newData) throws RepositoryException;
+    void loadSpaces() throws RepositoryException;
+    void saveSpaces() throws RepositoryException;
 }

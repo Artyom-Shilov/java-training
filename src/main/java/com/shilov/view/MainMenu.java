@@ -3,12 +3,13 @@ package com.shilov.view;
 import com.shilov.common.enums.MainMenuInteractionOutput;
 import com.shilov.common.enums.ResponseStatus;
 import com.shilov.controllers.AuthController;
+import com.shilov.controllers.ReservationController;
+import com.shilov.controllers.SpaceController;
 import com.shilov.controllers.factory.ControllerFactory;
 import com.shilov.controllers.responses.Response;
 
-public class MainMenu extends BaseMenu {
+public class MainMenu extends ConsoleOperator {
 
-    private static final String WELCOME_MESSAGE = "Welcome to space reservation app!\n";
     private static final String MAIN_MENU_OPTIONS = """
             1: Admin login
             2: User login
@@ -18,6 +19,9 @@ public class MainMenu extends BaseMenu {
     private static final MainMenu INSTANCE = new MainMenu();
 
     private final AuthController authController = ControllerFactory.getInstance().getBaseAuthController();
+    private final ReservationController reservationController = ControllerFactory.getInstance()
+            .getBaseReservationController();
+    private final SpaceController spaceController = ControllerFactory.getInstance().getBaseSpaceController();
 
 
     private MainMenu() {}
@@ -26,11 +30,6 @@ public class MainMenu extends BaseMenu {
         return INSTANCE;
     }
 
-    public void showWelcomeMessage() {
-        writeMessageInConsole(WELCOME_MESSAGE);
-    }
-
-    @Override
     public void showMenuOptions() {
         writeMessageInConsole(MAIN_MENU_OPTIONS);
     }
@@ -40,7 +39,7 @@ public class MainMenu extends BaseMenu {
         return switch (readLineFromConsole()) {
             case "1" -> processAdminLogin();
             case "2" -> processCustomerLogin();
-            case "3" -> processLogout();
+            case "3" -> processExit();
             default -> MainMenuInteractionOutput.INTERACTION_FAILED;
         };
     }
@@ -48,7 +47,7 @@ public class MainMenu extends BaseMenu {
     private MainMenuInteractionOutput processAdminLogin() {
         writeMessageInConsole(ENTER_LOGIN_MESSAGE);
         Response response = authController.loginAsAdmin(readLineFromConsole());
-        writeMessageInConsole(response.getOutput());
+        writeMessageInConsole(response.getPayload());
         return response.getStatus() == ResponseStatus.SUCCESS
                 ? MainMenuInteractionOutput.BROWSE_ADMIN_MENU
                 : MainMenuInteractionOutput.INTERACTION_FAILED;
@@ -57,17 +56,16 @@ public class MainMenu extends BaseMenu {
     private MainMenuInteractionOutput processCustomerLogin() {
         writeMessageInConsole(ENTER_LOGIN_MESSAGE);
         Response response = authController.loginAsCustomer(readLineFromConsole());
-        writeMessageInConsole(response.getOutput());
+        writeMessageInConsole(response.getPayload());
         return response.getStatus() == ResponseStatus.SUCCESS
                 ? MainMenuInteractionOutput.BROWSE_CUSTOMER_MENU
                 : MainMenuInteractionOutput.INTERACTION_FAILED;
     }
 
-    private MainMenuInteractionOutput processLogout() {
-        Response response = authController.logout();
-        writeMessageInConsole(response.getOutput());
-        return response.getStatus() == ResponseStatus.SUCCESS
-                ? MainMenuInteractionOutput.SESSION_FINISHED
-                : MainMenuInteractionOutput.INTERACTION_FAILED;
+    private MainMenuInteractionOutput processExit() {
+        writeMessageInConsole(spaceController.saveSpaces().getPayload());
+        writeMessageInConsole(reservationController.saveReservations().getPayload());
+        writeMessageInConsole(authController.logout().getPayload());
+        return MainMenuInteractionOutput.SESSION_FINISHED;
     }
 }

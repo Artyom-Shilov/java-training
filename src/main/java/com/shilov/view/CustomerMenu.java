@@ -9,7 +9,7 @@ import com.shilov.controllers.requests.MakeCurrentUserReservationRequest;
 import com.shilov.controllers.requests.ReservationDateTimeInput;
 import com.shilov.controllers.responses.Response;
 
-public class CustomerMenu extends BaseMenu {
+public class CustomerMenu extends ConsoleOperator {
 
     private static final String CUSTOMER_MENU_OPTIONS = """
             Customer menu options
@@ -33,7 +33,6 @@ public class CustomerMenu extends BaseMenu {
         return INSTANCE;
     }
 
-    @Override
     public void showMenuOptions() {
         writeMessageInConsole(CUSTOMER_MENU_OPTIONS);
     }
@@ -52,7 +51,7 @@ public class CustomerMenu extends BaseMenu {
 
     private CustomerMenuInteractionOutput processAvailableSpacesBrowse() {
         Response response = spaceController.getAvailableSpaces(readReservationTime());
-        writeMessageInConsole(response.getOutput());
+        writeMessageInConsole(response.getPayload());
         return response.getStatus() == ResponseStatus.SUCCESS
                 ? CustomerMenuInteractionOutput.BROWSE_CUSTOMER_MENU
                 : CustomerMenuInteractionOutput.INTERACTION_FAILED;
@@ -74,7 +73,7 @@ public class CustomerMenu extends BaseMenu {
         ReservationDateTimeInput reservationTime = readReservationTime();
         Response response = reservationController.makeCurrentUserReservation(
                 new MakeCurrentUserReservationRequest(spaceId, reservationTime));
-        writeMessageInConsole(response.getOutput());
+        writeMessageInConsole(response.getPayload());
         return response.getStatus() == ResponseStatus.SUCCESS
                 ? CustomerMenuInteractionOutput.BROWSE_CUSTOMER_MENU
                 : CustomerMenuInteractionOutput.INTERACTION_FAILED;
@@ -82,7 +81,7 @@ public class CustomerMenu extends BaseMenu {
 
     private CustomerMenuInteractionOutput processCurrentUserReservationBrowse() {
         Response response = reservationController.getCurrentUserReservations();
-        writeMessageInConsole(response.getOutput());
+        writeMessageInConsole(response.getPayload());
         return response.getStatus() == ResponseStatus.SUCCESS
                 ? CustomerMenuInteractionOutput.BROWSE_CUSTOMER_MENU
                 : CustomerMenuInteractionOutput.INTERACTION_FAILED;
@@ -91,7 +90,7 @@ public class CustomerMenu extends BaseMenu {
     private CustomerMenuInteractionOutput processReservationCancel() {
         writeMessageInConsole(ENTER_RESERVATION_ID);
         Response response = reservationController.cancelReservation(readLineFromConsole());
-        writeMessageInConsole(response.getOutput());
+        writeMessageInConsole(response.getPayload());
         return response.getStatus() == ResponseStatus.SUCCESS
                 ? CustomerMenuInteractionOutput.BROWSE_CUSTOMER_MENU
                 : CustomerMenuInteractionOutput.INTERACTION_FAILED;

@@ -5,11 +5,11 @@ import com.shilov.common.enums.ResponseStatus;
 public class Response {
 
     private ResponseStatus status;
-    private String output;
+    private String payload;
 
-    public Response(ResponseStatus status, String output) {
+    public Response(ResponseStatus status, String payload) {
         this.status = status;
-        this.output = output;
+        this.payload = payload;
     }
 
     public Response(ResponseStatus status) {
@@ -24,11 +24,11 @@ public class Response {
         this.status = status;
     }
 
-    public String getOutput() {
-        return output;
+    public String getPayload() {
+        return payload;
     }
 
-    public void setOutput(String output) {
-        this.output = output;
+    public void setPayload(String payload) {
+        this.payload = payload;
     }
 }

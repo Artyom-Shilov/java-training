@@ -1,13 +1,9 @@
-package com.shilov;
-
-import com.shilov.view.AdminMenu;
-import com.shilov.view.CustomerMenu;
-import com.shilov.view.MainMenu;
+package com.shilov.view;
 
 public class Runner {
 
     public static void main(String[] args) {
-       MainMenu.getInstance().showWelcomeMessage();
+       new AppInitializer().initApp();
        dispatchMainMenuOutput(true);
     }
 
