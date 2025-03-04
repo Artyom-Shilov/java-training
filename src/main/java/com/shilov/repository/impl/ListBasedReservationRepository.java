@@ -13,7 +13,8 @@ import java.util.function.Predicate;
 
 public class ListBasedReservationRepository implements ReservationRepository {
 
-    private static final String SERIALIZATION_FILE_PATH = "src/main/resources/reservations.txt";
+    private static final String SERIALIZATION_FILE_PATH = "src/main/resources/reservations.txt"
+            .replace('/', File.separatorChar);
 
     private List<Reservation> reservations = new ArrayList<>();
 

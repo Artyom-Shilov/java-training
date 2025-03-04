@@ -10,7 +10,8 @@ import java.util.List;
 
 public class ListBasedSpaceRepository implements SpaceRepository {
 
-    private static final String SERIALIZATION_FILE_PATH = "src/main/resources/spaces.txt";
+    private static final String SERIALIZATION_FILE_PATH = "src/main/resources/spaces.txt"
+            .replace('/', File.separatorChar);
 
     private List<Space> spaces = new ArrayList<>();
 
