@@ -3,14 +3,14 @@ package com.shilov.view;
 import com.shilov.common.enums.AdminMenuInteractionOutput;
 import com.shilov.common.enums.ResponseStatus;
 import com.shilov.common.enums.SpaceType;
-import com.shilov.controllers.factory.ControllerFactory;
 import com.shilov.controllers.ReservationController;
 import com.shilov.controllers.SpaceController;
+import com.shilov.controllers.factory.ControllerFactory;
 import com.shilov.controllers.responses.Response;
 
 import java.util.Arrays;
 
-public class AdminMenu extends BaseMenu {
+public class AdminMenu extends ConsoleOperator {
 
     private static final String ADMIN_MENU_OPTIONS = """
             Admin Menu Options
@@ -33,7 +33,6 @@ public class AdminMenu extends BaseMenu {
         return INSTANCE;
     }
 
-    @Override
     public void showMenuOptions() {
         writeMessageInConsole(ADMIN_MENU_OPTIONS);
     }
@@ -56,7 +55,7 @@ public class AdminMenu extends BaseMenu {
         writeMessageInConsole(ENTER_SPACE_PRICE);
         String enteredSpacePrice = readLineFromConsole();
         Response response = spaceController.createSpace(enteredSpaceType, enteredSpacePrice);
-        writeMessageInConsole(response.getOutput());
+        writeMessageInConsole(response.getPayload());
         return response.getStatus() == ResponseStatus.SUCCESS
                 ? AdminMenuInteractionOutput.BROWSE_ADMIN_MENU
                 : AdminMenuInteractionOutput.INTERACTION_FAILED;
@@ -65,7 +64,7 @@ public class AdminMenu extends BaseMenu {
     private AdminMenuInteractionOutput processSpaceRemoval() {
         writeMessageInConsole(ENTER_SPACE_ID);
         Response response = spaceController.deleteSpace(readLineFromConsole());
-        writeMessageInConsole(response.getOutput());
+        writeMessageInConsole(response.getPayload());
         return response.getStatus() == ResponseStatus.SUCCESS
                 ? AdminMenuInteractionOutput.BROWSE_ADMIN_MENU
                 : AdminMenuInteractionOutput.INTERACTION_FAILED;
@@ -73,7 +72,7 @@ public class AdminMenu extends BaseMenu {
 
     private AdminMenuInteractionOutput processAllReservationBrowse() {
         Response response = reservationController.getAllReservations();
-        writeMessageInConsole(response.getOutput());
+        writeMessageInConsole(response.getPayload());
         return response.getStatus() == ResponseStatus.SUCCESS
                 ? AdminMenuInteractionOutput.BROWSE_ADMIN_MENU
                 : AdminMenuInteractionOutput.INTERACTION_FAILED;

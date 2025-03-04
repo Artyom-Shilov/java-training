@@ -4,6 +4,7 @@
 *.iml
 *.ipr
 *.log
+target/
 
 # Compiled class file
 *.class

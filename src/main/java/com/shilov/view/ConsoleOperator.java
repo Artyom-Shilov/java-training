@@ -2,7 +2,7 @@ package com.shilov.view;
 
 import java.util.Scanner;
 
-public abstract class BaseMenu {
+public abstract class ConsoleOperator {
 
     protected static final String ENTER_OPTION_NUMBER = "Please, enter menu option number: ";
     protected static final String ENTER_DATE = "Please, enter date in format yyyy-mm-dd:";
@@ -22,6 +22,4 @@ public abstract class BaseMenu {
     protected void writeMessageInConsole(String message) {
         System.out.println(message);
     }
-
-    abstract void showMenuOptions();
 }

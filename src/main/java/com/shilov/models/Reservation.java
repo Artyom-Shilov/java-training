@@ -2,10 +2,11 @@ package com.shilov.models;
 
 import com.shilov.common.enums.ReservationStatus;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Reservation {
+public class Reservation implements Serializable {
 
     private String id;
     private User customer;

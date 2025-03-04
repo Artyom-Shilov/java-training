@@ -15,4 +15,6 @@ public interface ReservationService {
     List<Reservation> getAllReservations() throws ServiceException;
     List<Reservation> getUserReservations(User customer) throws ServiceException;
     Reservation getReservationById(String reservationId) throws ServiceException;
+    void saveReservations() throws ServiceException;
+    void initReservations() throws ServiceException;
 }

@@ -93,4 +93,22 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public void saveReservations() throws ServiceException {
+        try {
+            reservationRepository.saveReservations();
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void initReservations() throws ServiceException {
+        try {
+            reservationRepository.loadReservations();
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

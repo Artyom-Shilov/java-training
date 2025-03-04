@@ -1,10 +1,14 @@
 package com.shilov.models;
 
+import com.shilov.common.exceptions.ReservationDateTimeFormatException;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
-public class ReservationDateTime {
+public class ReservationDateTime implements Serializable {
 
     private LocalTime startTime;
     private LocalTime endTime;
@@ -18,8 +22,15 @@ public class ReservationDateTime {
         this.date = date;
     }
 
-    public ReservationDateTime(String date, String startTime, String endTime) {
-        this(LocalDate.parse(date), LocalTime.parse(startTime), LocalTime.parse(endTime));
+    public ReservationDateTime(String date, String startTime, String endTime)
+            throws ReservationDateTimeFormatException {
+        try {
+            this.date = LocalDate.parse(date);
+            this.startTime = LocalTime.parse(startTime);
+            this.endTime = LocalTime.parse(endTime);
+        } catch (DateTimeParseException e) {
+            throw new ReservationDateTimeFormatException(e.getMessage());
+        }
     }
 
     public LocalTime getStartTime() {

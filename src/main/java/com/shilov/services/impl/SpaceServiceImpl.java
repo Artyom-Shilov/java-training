@@ -73,4 +73,22 @@ public class SpaceServiceImpl implements SpaceService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public void saveSpaces() throws ServiceException {
+        try {
+            spaceRepository.saveSpaces();
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void initSpaces() throws ServiceException {
+        try {
+            spaceRepository.loadSpaces();
+        } catch (RepositoryException e) {
+            throw new ServiceException(e);
+        }
+    }
 }
