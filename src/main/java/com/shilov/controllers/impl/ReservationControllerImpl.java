@@ -38,7 +38,7 @@ public class ReservationControllerImpl implements ReservationController {
                 output.append(i + 1).append(": ").append(allReservations.get(i)).append("\n");
             }
             if (output.isEmpty()) {
-                String noReservationsMessage = "System does not have any reservations.bin";
+                String noReservationsMessage = "System does not have any reservations";
                 output.append(noReservationsMessage);
             }
             response = new Response(ResponseStatus.SUCCESS, output.toString());
