@@ -3,6 +3,7 @@ package com.shilov.view;
 import com.shilov.common.class_loaders.FileClassLoader;
 import com.shilov.common.console.ConsoleOperator;
 import com.shilov.common.enums.MainMenuInteractionOutput;
+import com.shilov.common.enums.PropertiesKey;
 import com.shilov.common.enums.ResponseStatus;
 import com.shilov.controllers.AuthController;
 import com.shilov.controllers.ReservationController;
@@ -83,10 +84,11 @@ public class MainMenu extends ConsoleOperator {
 
     private void writeGoodbye() throws IOException, NoSuchMethodException,
             InvocationTargetException, IllegalAccessException {
-        String goodbyeWriterFilePath = "src/main/resources/GoodbyeWriter.class"
-                .replace('/', File.separatorChar);
+        String goodbyeWriterFilePath = System
+                .getProperty(PropertiesKey.GOODBYE_WRITER_CLASS_FILE_PATH.getPropertyName()).trim();
+        String className = "GoodbyeWriter";
         String methodName = "writeGoodbye";
-        Class<?> goodbyeWriterClass = FileClassLoader.getInstance().loadClassFromFile(goodbyeWriterFilePath);
+        Class<?> goodbyeWriterClass = FileClassLoader.getInstance().loadClassFromFile(goodbyeWriterFilePath, className);
         goodbyeWriterClass.getMethod(methodName).invoke(null);
     }
 }

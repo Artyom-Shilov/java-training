@@ -12,10 +12,15 @@ public class FileClassLoader extends ClassLoader {
         return INSTANCE;
     }
 
-    public Class<?> loadClassFromFile(String filePath) throws IOException {
-        try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
-            byte[] bytes = fileInputStream.readAllBytes();
-            return defineClass(null, bytes, 0, bytes.length);
+    public Class<?> loadClassFromFile(String filePath, String className) throws IOException {
+        Class<?> clazz = findLoadedClass(className);
+        if (clazz != null) {
+            return clazz;
+        } else {
+            try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
+                byte[] bytes = fileInputStream.readAllBytes();
+                return defineClass(null, bytes, 0, bytes.length);
+            }
         }
     }
 }
