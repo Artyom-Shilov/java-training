@@ -76,8 +76,6 @@ public class ListBasedReservationRepository implements ReservationRepository {
     }
 
     private String getReservationStoragePath() throws IOException {
-        System.out.println(PropertyReader.getProperty(PropertyReader.RESERVATION_STORAGE_PATH).trim()
-                .replace('/', File.separatorChar));
         return PropertyReader.getProperty(PropertyReader.RESERVATION_STORAGE_PATH).trim()
                 .replace('/', File.separatorChar);
     }

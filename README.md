@@ -1,3 +1,3 @@
 # java-training
 
-mvn compile exec:java -DreservationsStoragePath="" -DspacesStoragePath="" -DgoodbyeWriterClassFilePath=""
+mvn compile exec:java -DconfigFilePath=""
