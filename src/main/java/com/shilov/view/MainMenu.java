@@ -5,6 +5,7 @@ import com.shilov.common.console.ConsoleOperator;
 import com.shilov.common.enums.MainMenuInteractionOutput;
 import com.shilov.common.enums.PropertiesKey;
 import com.shilov.common.enums.ResponseStatus;
+import com.shilov.common.properties.PropertyReader;
 import com.shilov.controllers.AuthController;
 import com.shilov.controllers.ReservationController;
 import com.shilov.controllers.SpaceController;
@@ -84,8 +85,8 @@ public class MainMenu extends ConsoleOperator {
 
     private void writeGoodbye() throws IOException, NoSuchMethodException,
             InvocationTargetException, IllegalAccessException {
-        String goodbyeWriterFilePath = System
-                .getProperty(PropertiesKey.GOODBYE_WRITER_CLASS_FILE_PATH.getPropertyName()).trim();
+        String goodbyeWriterFilePath = PropertyReader.getProperty(PropertyReader.GOODBYE_WRITER_CLASS_FILE_PATH)
+                .trim().replace('/', File.separatorChar);
         String className = "GoodbyeWriter";
         String methodName = "writeGoodbye";
         Class<?> goodbyeWriterClass = FileClassLoader.getInstance().loadClassFromFile(goodbyeWriterFilePath, className);

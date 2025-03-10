@@ -2,6 +2,7 @@ package com.shilov.repository.impl;
 
 import com.shilov.common.enums.PropertiesKey;
 import com.shilov.common.exceptions.RepositoryException;
+import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Reservation;
 import com.shilov.models.ReservationDateTime;
 import com.shilov.models.User;
@@ -74,7 +75,10 @@ public class ListBasedReservationRepository implements ReservationRepository {
         }
     }
 
-    private String getReservationStoragePath() {
-        return System.getProperty(PropertiesKey.RESERVATION_STORAGE_PATH.getPropertyName()).trim();
+    private String getReservationStoragePath() throws IOException {
+        System.out.println(PropertyReader.getProperty(PropertyReader.RESERVATION_STORAGE_PATH).trim()
+                .replace('/', File.separatorChar));
+        return PropertyReader.getProperty(PropertyReader.RESERVATION_STORAGE_PATH).trim()
+                .replace('/', File.separatorChar);
     }
 }

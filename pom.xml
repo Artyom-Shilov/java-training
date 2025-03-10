@@ -37,9 +37,7 @@
                 <configuration>
                     <mainClass>com.shilov.view.Runner</mainClass>
                     <arguments>
-                        <argument>reservationsStoragePath</argument>
-                        <argument>spacesStoragePath</argument>
-                        <argument>goodbyeWriterClassFilePath</argument>
+                        <argument>configFilePath</argument>
                     </arguments>
                 </configuration>
             </plugin>

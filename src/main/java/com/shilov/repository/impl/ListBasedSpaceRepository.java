@@ -2,6 +2,7 @@ package com.shilov.repository.impl;
 
 import com.shilov.common.enums.PropertiesKey;
 import com.shilov.common.exceptions.RepositoryException;
+import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Space;
 import com.shilov.repository.SpaceRepository;
 
@@ -64,7 +65,8 @@ public class ListBasedSpaceRepository implements SpaceRepository {
         }
     }
 
-    private String getSpacesStoragePath() {
-        return System.getProperty(PropertiesKey.SPACE_STORAGE_PATH.getPropertyName()).trim();
+    private String getSpacesStoragePath() throws IOException {
+        return PropertyReader.getProperty(PropertyReader.SPACE_STORAGE_PATH).trim()
+                .replace('/', File.separatorChar);
     }
 }
