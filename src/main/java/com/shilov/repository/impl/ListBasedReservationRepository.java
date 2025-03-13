@@ -1,6 +1,5 @@
 package com.shilov.repository.impl;
 
-import com.shilov.common.enums.PropertiesKey;
 import com.shilov.common.exceptions.RepositoryException;
 import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Reservation;
@@ -11,6 +10,7 @@ import com.shilov.repository.ReservationRepository;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class ListBasedReservationRepository implements ReservationRepository {
@@ -22,9 +22,8 @@ public class ListBasedReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation getReservationById(String id) throws RepositoryException {
-        return reservations.stream().filter(r -> r.getId().equals(id)).findFirst()
-                .orElseThrow(() -> new RepositoryException("Reservation not found"));
+    public Optional<Reservation> getReservationById(String id) {
+        return reservations.stream().filter(r -> r.getId().equals(id)).findFirst();
     }
 
     @Override

@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User getCurrentUser() throws ServiceException{
         try {
-            return userRepository.getCurrentUser();
+            return userRepository.getCurrentUser().orElseThrow(() -> new ServiceException("No user is logged in"));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

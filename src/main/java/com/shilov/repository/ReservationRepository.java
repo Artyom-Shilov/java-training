@@ -6,11 +6,12 @@ import com.shilov.models.ReservationDateTime;
 import com.shilov.models.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationRepository {
 
     List<Reservation> getAllReservations() throws  RepositoryException;
-    Reservation getReservationById(String id) throws  RepositoryException;
+    Optional<Reservation> getReservationById(String id) throws  RepositoryException;
     List<Reservation> getReservationsByCustomer(User customer) throws  RepositoryException;
     void addReservation(Reservation reservation) throws  RepositoryException;
     void updateReservation(String id, Reservation newData) throws  RepositoryException;

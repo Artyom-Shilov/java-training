@@ -1,6 +1,5 @@
 package com.shilov.repository.impl;
 
-import com.shilov.common.enums.PropertiesKey;
 import com.shilov.common.exceptions.RepositoryException;
 import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Space;
@@ -9,6 +8,7 @@ import com.shilov.repository.SpaceRepository;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ListBasedSpaceRepository implements SpaceRepository {
 
@@ -20,9 +20,8 @@ public class ListBasedSpaceRepository implements SpaceRepository {
     }
 
     @Override
-    public Space getSpaceById(String id) throws RepositoryException {
-        return spaces.stream().filter(space -> space.getId().equals(id)).findFirst()
-                .orElseThrow(() -> new RepositoryException("Space not found"));
+    public Optional<Space> getSpaceById(String id) {
+        return spaces.stream().filter(space -> space.getId().equals(id)).findFirst();
     }
 
     @Override

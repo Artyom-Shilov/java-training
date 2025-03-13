@@ -68,7 +68,7 @@ public class SpaceServiceImpl implements SpaceService {
     @Override
     public Space getSpaceById(String id) throws ServiceException {
         try {
-            return spaceRepository.getSpaceById(id);
+            return spaceRepository.getSpaceById(id).orElseThrow(() -> new ServiceException("Space not found"));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
