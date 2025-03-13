@@ -1,6 +1,8 @@
 package com.shilov.repository.impl;
 
+import com.shilov.common.enums.PropertiesKey;
 import com.shilov.common.exceptions.RepositoryException;
+import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Reservation;
 import com.shilov.models.ReservationDateTime;
 import com.shilov.models.User;
@@ -12,8 +14,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class ListBasedReservationRepository implements ReservationRepository {
-
-    private static final String SERIALIZATION_FILE_PATH = "src/main/resources/reservations.txt";
 
     private List<Reservation> reservations = new ArrayList<>();
 
@@ -57,7 +57,7 @@ public class ListBasedReservationRepository implements ReservationRepository {
 
     @Override
     public void loadReservations() throws RepositoryException {
-        try (FileInputStream fileInputStream = new FileInputStream(SERIALIZATION_FILE_PATH);
+        try (FileInputStream fileInputStream = new FileInputStream(getReservationStoragePath());
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             reservations = (ArrayList<Reservation>) objectInputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
@@ -67,11 +67,16 @@ public class ListBasedReservationRepository implements ReservationRepository {
 
     @Override
     public void saveReservations() throws RepositoryException {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(SERIALIZATION_FILE_PATH);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(getReservationStoragePath());
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
             objectOutputStream.writeObject(reservations);
         } catch (IOException e) {
             throw new RepositoryException(e);
         }
+    }
+
+    private String getReservationStoragePath() throws IOException {
+        return PropertyReader.getProperty(PropertyReader.RESERVATION_STORAGE_PATH).trim()
+                .replace('/', File.separatorChar);
     }
 }

@@ -1,6 +1,8 @@
 package com.shilov.repository.impl;
 
+import com.shilov.common.enums.PropertiesKey;
 import com.shilov.common.exceptions.RepositoryException;
+import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Space;
 import com.shilov.repository.SpaceRepository;
 
@@ -9,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListBasedSpaceRepository implements SpaceRepository {
-
-    private static final String SERIALIZATION_FILE_PATH = "src/main/resources/spaces.txt";
 
     private List<Space> spaces = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class ListBasedSpaceRepository implements SpaceRepository {
 
     @Override
     public void loadSpaces() throws RepositoryException {
-        try (FileInputStream fileInputStream = new FileInputStream(SERIALIZATION_FILE_PATH);
+        try (FileInputStream fileInputStream = new FileInputStream(getSpacesStoragePath());
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             spaces = (ArrayList<Space>) objectInputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
@@ -57,11 +57,16 @@ public class ListBasedSpaceRepository implements SpaceRepository {
 
     @Override
     public void saveSpaces() throws RepositoryException {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(SERIALIZATION_FILE_PATH);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(getSpacesStoragePath());
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
             objectOutputStream.writeObject(spaces);
         } catch (IOException e) {
             throw new RepositoryException(e);
         }
+    }
+
+    private String getSpacesStoragePath() throws IOException {
+        return PropertyReader.getProperty(PropertyReader.SPACE_STORAGE_PATH).trim()
+                .replace('/', File.separatorChar);
     }
 }

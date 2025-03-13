@@ -1,12 +1,21 @@
 package com.shilov.view;
 
+import com.shilov.common.class_loaders.FileClassLoader;
+import com.shilov.common.console.ConsoleOperator;
 import com.shilov.common.enums.MainMenuInteractionOutput;
+import com.shilov.common.enums.PropertiesKey;
 import com.shilov.common.enums.ResponseStatus;
+import com.shilov.common.properties.PropertyReader;
 import com.shilov.controllers.AuthController;
 import com.shilov.controllers.ReservationController;
 import com.shilov.controllers.SpaceController;
 import com.shilov.controllers.factory.ControllerFactory;
 import com.shilov.controllers.responses.Response;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class MainMenu extends ConsoleOperator {
 
@@ -66,6 +75,21 @@ public class MainMenu extends ConsoleOperator {
         writeMessageInConsole(spaceController.saveSpaces().getPayload());
         writeMessageInConsole(reservationController.saveReservations().getPayload());
         writeMessageInConsole(authController.logout().getPayload());
+        try {
+            writeGoodbye();
+        } catch (IOException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            System.err.println(e.getMessage());
+        }
         return MainMenuInteractionOutput.SESSION_FINISHED;
+    }
+
+    private void writeGoodbye() throws IOException, NoSuchMethodException,
+            InvocationTargetException, IllegalAccessException {
+        String goodbyeWriterFilePath = PropertyReader.getProperty(PropertyReader.GOODBYE_WRITER_CLASS_FILE_PATH)
+                .trim().replace('/', File.separatorChar);
+        String className = "GoodbyeWriter";
+        String methodName = "writeGoodbye";
+        Class<?> goodbyeWriterClass = FileClassLoader.getInstance().loadClassFromFile(goodbyeWriterFilePath, className);
+        goodbyeWriterClass.getMethod(methodName).invoke(null);
     }
 }

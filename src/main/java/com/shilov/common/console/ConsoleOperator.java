@@ -1,4 +1,4 @@
-package com.shilov.view;
+package com.shilov.common.console;
 
 import java.util.Scanner;
 
