@@ -88,7 +88,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation getReservationById(String reservationId) throws ServiceException {
         try {
-            return reservationRepository.getReservationById(reservationId);
+            return reservationRepository.getReservationById(reservationId)
+                    .orElseThrow(() -> new ServiceException("Reservation not found"));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
