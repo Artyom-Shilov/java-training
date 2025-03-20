@@ -12,7 +12,9 @@ public class Space implements Serializable {
     private SpaceType type;
     private int hourlyPrice;
 
-    public Space() {}
+    public Space() {
+        this.id = UUID.randomUUID().toString();
+    }
 
     public Space(SpaceType type, int hourlyPrice) {
         this.id = UUID.randomUUID().toString();
