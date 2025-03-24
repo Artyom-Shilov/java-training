@@ -5,7 +5,8 @@ import com.shilov.common.enums.CustomerMenuInteractionOutput;
 import com.shilov.common.enums.ResponseStatus;
 import com.shilov.controllers.ReservationController;
 import com.shilov.controllers.SpaceController;
-import com.shilov.controllers.factory.ControllerFactory;
+import com.shilov.controllers.factory.BaseControllerFactory;
+import com.shilov.controllers.factory.JdbcControllerFactory;
 import com.shilov.controllers.requests.MakeCurrentUserReservationRequest;
 import com.shilov.controllers.requests.ReservationDateTimeInput;
 import com.shilov.controllers.responses.Response;
@@ -22,9 +23,10 @@ public class CustomerMenu extends ConsoleOperator {
             5: Return to main menu
             """;
 
-    private final SpaceController spaceController = ControllerFactory.getInstance().getBaseSpaceController();
-    private final ReservationController reservationController = ControllerFactory.getInstance()
-            .getBaseReservationController();
+    private final BaseControllerFactory controllerFactory = JdbcControllerFactory.getInstance();
+    private final SpaceController spaceController = controllerFactory.getSpaceController();
+    private final ReservationController reservationController = controllerFactory
+            .getReservationController();
 
     private static final CustomerMenu INSTANCE = new CustomerMenu();
 

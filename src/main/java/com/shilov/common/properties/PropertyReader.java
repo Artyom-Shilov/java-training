@@ -10,6 +10,10 @@ public class PropertyReader {
     public static final String SPACE_STORAGE_PATH = "spaces.path";
     public static final String GOODBYE_WRITER_CLASS_FILE_PATH = "goodbyeWriter.path";
 
+    public static final String DB_URL = "db.url";
+    public static final String DB_USER = "db.user";
+    public static final String DB_PASSWORD = "db.password";
+
     private PropertyReader() {}
 
     public  static String getProperty(String propertyName) throws IOException {

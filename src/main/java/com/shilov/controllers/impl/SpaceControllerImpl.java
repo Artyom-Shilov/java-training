@@ -57,7 +57,6 @@ public class SpaceControllerImpl implements SpaceController {
                     SpaceType.valueOf(request.getUpdatedSpaceType()),
                     Integer.parseInt(request.getUpdatedHourlyRate())
             );
-            updatedData.setId(request.getSpaceId());
             spaceService.updateSpace(request.getSpaceId(),updatedData);
             response = new Response(ResponseStatus.SUCCESS, successMessage);
         } catch (ServiceException | IllegalArgumentException e) {

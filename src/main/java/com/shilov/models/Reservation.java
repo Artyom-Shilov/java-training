@@ -4,11 +4,10 @@ import com.shilov.common.enums.ReservationStatus;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Reservation implements Serializable {
 
-    private String id;
+    private Long id;
     private User customer;
     private Space space;
     private ReservationStatus status;
@@ -18,18 +17,26 @@ public class Reservation implements Serializable {
 
     public Reservation(User customer, Space space, ReservationStatus status,
                        ReservationDateTime reservationDateTime) {
-        this.id = UUID.randomUUID().toString();
         this.customer = customer;
         this.space = space;
         this.status = status;
         this.reservationDateTime = reservationDateTime;
     }
 
-    public String getId() {
+    public Reservation(Long id, User customer, Space space, ReservationStatus status,
+                       ReservationDateTime reservationDateTime) {
+        this.id = id;
+        this.customer = customer;
+        this.space = space;
+        this.status = status;
+        this.reservationDateTime = reservationDateTime;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

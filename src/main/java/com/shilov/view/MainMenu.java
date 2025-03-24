@@ -3,19 +3,19 @@ package com.shilov.view;
 import com.shilov.common.class_loaders.FileClassLoader;
 import com.shilov.common.console.ConsoleOperator;
 import com.shilov.common.enums.MainMenuInteractionOutput;
-import com.shilov.common.enums.PropertiesKey;
 import com.shilov.common.enums.ResponseStatus;
 import com.shilov.common.properties.PropertyReader;
 import com.shilov.controllers.AuthController;
 import com.shilov.controllers.ReservationController;
 import com.shilov.controllers.SpaceController;
+import com.shilov.controllers.factory.BaseControllerFactory;
 import com.shilov.controllers.factory.ControllerFactory;
+import com.shilov.controllers.factory.JdbcControllerFactory;
 import com.shilov.controllers.responses.Response;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class MainMenu extends ConsoleOperator {
 
@@ -27,11 +27,11 @@ public class MainMenu extends ConsoleOperator {
     private  static final String ENTER_LOGIN_MESSAGE = "Please, enter your login: ";
     private static final MainMenu INSTANCE = new MainMenu();
 
-    private final AuthController authController = ControllerFactory.getInstance().getBaseAuthController();
-    private final ReservationController reservationController = ControllerFactory.getInstance()
-            .getBaseReservationController();
-    private final SpaceController spaceController = ControllerFactory.getInstance().getBaseSpaceController();
-
+    private final BaseControllerFactory controllerFactory = JdbcControllerFactory.getInstance();
+    private final AuthController authController = controllerFactory.getAuthController();
+    private final ReservationController reservationController = controllerFactory
+            .getReservationController();
+    private final SpaceController spaceController = ControllerFactory.getInstance().getSpaceController();
 
     private MainMenu() {}
 

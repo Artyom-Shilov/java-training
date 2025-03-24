@@ -4,29 +4,33 @@ import com.shilov.common.enums.SpaceType;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Space implements Serializable {
 
-    private String id;
+    private Long id;
     private SpaceType type;
     private int hourlyPrice;
 
     public Space() {
-        this.id = UUID.randomUUID().toString();
+        type = SpaceType.OPEN;
     }
 
     public Space(SpaceType type, int hourlyPrice) {
-        this.id = UUID.randomUUID().toString();
         this.type = type;
         this.hourlyPrice = hourlyPrice;
     }
 
-    public String getId() {
+    public Space(Long id, SpaceType type, int hourlyPrice) {
+        this.id = id;
+        this.type = type;
+        this.hourlyPrice = hourlyPrice;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

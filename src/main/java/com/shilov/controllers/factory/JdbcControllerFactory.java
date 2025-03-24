@@ -6,14 +6,11 @@ import com.shilov.controllers.SpaceController;
 import com.shilov.controllers.impl.AuthControllerImpl;
 import com.shilov.controllers.impl.ReservationControllerImpl;
 import com.shilov.controllers.impl.SpaceControllerImpl;
+import com.shilov.repository.CurrentUserRepository;
 import com.shilov.repository.GlobalUserRepository;
 import com.shilov.repository.ReservationRepository;
 import com.shilov.repository.SpaceRepository;
-import com.shilov.repository.CurrentUserRepository;
-import com.shilov.repository.impl.JdbcGlobalUserRepository;
-import com.shilov.repository.impl.ListBasedReservationRepository;
-import com.shilov.repository.impl.ListBasedSpaceRepository;
-import com.shilov.repository.impl.CurrentUserRepositoryImpl;
+import com.shilov.repository.impl.*;
 import com.shilov.services.AuthService;
 import com.shilov.services.ReservationService;
 import com.shilov.services.SpaceService;
@@ -21,12 +18,12 @@ import com.shilov.services.impl.AuthServiceImpl;
 import com.shilov.services.impl.ReservationServiceImpl;
 import com.shilov.services.impl.SpaceServiceImpl;
 
-public class ControllerFactory implements BaseControllerFactory {
+public class JdbcControllerFactory implements BaseControllerFactory {
 
-    private final SpaceRepository spaceRepository = new ListBasedSpaceRepository();
+    private final SpaceRepository spaceRepository = new JdbcSpaceRepository();
     private final CurrentUserRepository currentUserRepository = new CurrentUserRepositoryImpl();
     private final GlobalUserRepository globalUserRepository = new JdbcGlobalUserRepository();
-    private final ReservationRepository reservationRepository = new ListBasedReservationRepository();
+    private final ReservationRepository reservationRepository = new JdbcReservationRepository();
     private final SpaceService spaceService = new SpaceServiceImpl(spaceRepository, reservationRepository);
     private final AuthService authService = new AuthServiceImpl(currentUserRepository, globalUserRepository);
     private final ReservationService reservationService = new ReservationServiceImpl(reservationRepository);
@@ -37,13 +34,13 @@ public class ControllerFactory implements BaseControllerFactory {
     private final SpaceControllerImpl spaceControllerImpl
             = new SpaceControllerImpl(spaceService);
 
-    private static final ControllerFactory instance = new ControllerFactory();
+    private static final JdbcControllerFactory instance = new JdbcControllerFactory();
 
-    public static ControllerFactory getInstance(){
+    public static JdbcControllerFactory getInstance(){
         return instance;
     }
 
-    private ControllerFactory(){}
+    private JdbcControllerFactory(){}
 
     @Override
     public AuthController getAuthController() {

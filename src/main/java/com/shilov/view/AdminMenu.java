@@ -6,7 +6,8 @@ import com.shilov.common.enums.ResponseStatus;
 import com.shilov.common.enums.SpaceType;
 import com.shilov.controllers.ReservationController;
 import com.shilov.controllers.SpaceController;
-import com.shilov.controllers.factory.ControllerFactory;
+import com.shilov.controllers.factory.BaseControllerFactory;
+import com.shilov.controllers.factory.JdbcControllerFactory;
 import com.shilov.controllers.responses.Response;
 
 import java.util.Arrays;
@@ -22,9 +23,9 @@ public class AdminMenu extends ConsoleOperator {
             4: Return to main menu
             """;
 
-    private final SpaceController spaceController = ControllerFactory.getInstance().getBaseSpaceController();
-    private final ReservationController reservationController = ControllerFactory.getInstance()
-            .getBaseReservationController();
+    private final BaseControllerFactory controllerFactory = JdbcControllerFactory.getInstance();
+    private final SpaceController spaceController = controllerFactory.getSpaceController();
+    private final ReservationController reservationController = controllerFactory.getReservationController();
 
     private static final AdminMenu INSTANCE = new AdminMenu();
 
