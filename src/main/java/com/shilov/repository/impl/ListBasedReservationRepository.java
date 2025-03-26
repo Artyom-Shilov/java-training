@@ -8,6 +8,7 @@ import com.shilov.models.User;
 import com.shilov.repository.ReservationRepository;
 
 import java.io.*;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class ListBasedReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> getReservationById(String id) {
+    public Optional<Reservation> getReservationById(Long id) {
         return reservations.stream().filter(r -> r.getId().equals(id)).findFirst();
     }
 
@@ -32,12 +33,15 @@ public class ListBasedReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void addReservation(Reservation reservation) {
+    public Long addReservation(Reservation reservation) {
+        long generatedId = Math.abs(new SecureRandom().nextLong());
+        reservation.setId(generatedId);
         reservations.add(reservation);
+        return generatedId;
     }
 
     @Override
-    public void updateReservation(String id, Reservation newData) throws RepositoryException {
+    public void updateReservation(Long id, Reservation newData) throws RepositoryException {
         Reservation reservationToUpdate = reservations.stream().filter(r -> r.getId().equals(id)).findFirst()
                 .orElseThrow(() -> new RepositoryException("Failed to find reservation to update by id: " + id));
         reservations.set(reservations.indexOf(reservationToUpdate), newData);
@@ -47,7 +51,7 @@ public class ListBasedReservationRepository implements ReservationRepository {
     public List<Reservation> getReservationsIntersectedWithTimeRange(ReservationDateTime dateTimeForIntersection) {
         Predicate<? super Reservation> timeIntersectionPredicate = reservation ->
                 !dateTimeForIntersection.getEndTime().isBefore(reservation.getReservationDateTime().getStartTime()) &&
-                ! dateTimeForIntersection.getStartTime().isAfter(reservation.getReservationDateTime().getEndTime());
+                !dateTimeForIntersection.getStartTime().isAfter(reservation.getReservationDateTime().getEndTime());
         return reservations.stream()
                 .filter(r -> r.getReservationDateTime().getDate().equals(dateTimeForIntersection.getDate()))
                 .filter(timeIntersectionPredicate)

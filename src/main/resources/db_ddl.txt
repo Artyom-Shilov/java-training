@@ -1,0 +1,28 @@
+CREATE DATABASE java_training;
+
+USE java_training;
+
+CREATE TABLE spaces (
+id SERIAL PRIMARY KEY,
+type VARCHAR(30),
+hourly_price INT
+);
+
+CREATE TABLE users (
+id SERIAL PRIMARY KEY,
+role VARCHAR(30),
+login VARCHAR(100),
+UNIQUE (login)
+);
+
+CREATE TABLE reservations (
+id SERIAL PRIMARY KEY,
+customer_id BIGINT UNSIGNED,
+space_id BIGINT UNSIGNED,
+status VARCHAR(30),
+start_time TIME,
+end_time TIME,
+date DATE,
+FOREIGN KEY (customer_id) REFERENCES users (id),
+FOREIGN KEY (space_id) REFERENCES spaces (id)
+);

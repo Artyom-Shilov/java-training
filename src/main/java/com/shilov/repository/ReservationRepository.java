@@ -11,12 +11,11 @@ import java.util.Optional;
 public interface ReservationRepository {
 
     List<Reservation> getAllReservations() throws  RepositoryException;
-    Optional<Reservation> getReservationById(String id) throws  RepositoryException;
+    Optional<Reservation> getReservationById(Long id) throws  RepositoryException;
     List<Reservation> getReservationsByCustomer(User customer) throws  RepositoryException;
-    void addReservation(Reservation reservation) throws  RepositoryException;
-    void updateReservation(String id, Reservation newData) throws  RepositoryException;
+    Long addReservation(Reservation reservation) throws  RepositoryException;
+    void updateReservation(Long id, Reservation newData) throws  RepositoryException;
     List<Reservation> getReservationsIntersectedWithTimeRange(ReservationDateTime dateTimeForIntersection) throws  RepositoryException;
     void loadReservations() throws RepositoryException;
     void saveReservations() throws RepositoryException;
-
 }

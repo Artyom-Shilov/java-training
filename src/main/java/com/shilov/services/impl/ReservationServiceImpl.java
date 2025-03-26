@@ -88,7 +88,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation getReservationById(String reservationId) throws ServiceException {
         try {
-            return reservationRepository.getReservationById(reservationId)
+            return reservationRepository.getReservationById(parseReservationId(reservationId))
                     .orElseThrow(() -> new ServiceException("Reservation not found"));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
@@ -110,6 +110,14 @@ public class ReservationServiceImpl implements ReservationService {
             reservationRepository.loadReservations();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
+        }
+    }
+
+    private Long parseReservationId(String id) throws ServiceException {
+        try {
+            return Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new ServiceException("Invalid reservation id format");
         }
     }
 }

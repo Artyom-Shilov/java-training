@@ -34,7 +34,7 @@ public class SpaceServiceImpl implements SpaceService {
     @Override
     public void deleteSpace(String id) throws ServiceException {
         try {
-            spaceRepository.deleteSpace(id);
+            spaceRepository.deleteSpace(parseSpaceId(id));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -43,7 +43,7 @@ public class SpaceServiceImpl implements SpaceService {
     @Override
     public void updateSpace(String id, Space space) throws ServiceException {
         try {
-            spaceRepository.updateSpace(id, space);
+            spaceRepository.updateSpace(parseSpaceId(id), space);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -68,7 +68,7 @@ public class SpaceServiceImpl implements SpaceService {
     @Override
     public Space getSpaceById(String id) throws ServiceException {
         try {
-            return spaceRepository.getSpaceById(id).orElseThrow(() -> new ServiceException("Space not found"));
+            return spaceRepository.getSpaceById(parseSpaceId(id)).orElseThrow(() -> new ServiceException("Space not found"));
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -89,6 +89,14 @@ public class SpaceServiceImpl implements SpaceService {
             spaceRepository.loadSpaces();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
+        }
+    }
+
+    private Long parseSpaceId(String id) throws ServiceException {
+        try {
+            return Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new ServiceException("Invalid space id format");
         }
     }
 }

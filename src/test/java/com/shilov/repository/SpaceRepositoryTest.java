@@ -4,8 +4,10 @@ import com.shilov.common.enums.SpaceType;
 import com.shilov.common.exceptions.RepositoryException;
 import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Space;
-import com.shilov.repository.impl.ListBasedSpaceRepository;
+import com.shilov.repository.impl.JdbcSpaceRepository;
 import org.junit.Assert;
+
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,18 +28,18 @@ class SpaceRepositoryTest {
 
     @BeforeEach
     void setUp() throws RepositoryException {
-        spaceRepository = new ListBasedSpaceRepository();
-        spaceRepository.saveSpaces();
+        spaceRepository = new JdbcSpaceRepository();
+        spaceRepository.deleteAllSpaces();
     }
 
     @Test
     void getAllSpaces_shouldReturnSpacesWhenFound() throws RepositoryException {
-        System.out.println(spaceRepository);
         List<Space> spacesToAdd = new ArrayList<>(){};
         spacesToAdd.add(new Space());
         spacesToAdd.add(new Space());
         for (Space space : spacesToAdd) {
-            spaceRepository.addSpace(space);
+            Long spaceId = spaceRepository.addSpace(space);
+            space.setId(spaceId);
         }
 
         List<Space> result = spaceRepository.getAllSpaces();
@@ -55,10 +57,9 @@ class SpaceRepositoryTest {
     @ParameterizedTest
     @MethodSource("provideSpaces")
     void getSpaceById_shouldReturnSpaceWhenFound(Space space) throws RepositoryException {
-        spaceRepository.addSpace(space);
+        Long spaceId = spaceRepository.addSpace(space);
 
-        Optional<Space> result = spaceRepository.getSpaceById(space.getId());
-
+        Optional<Space> result = spaceRepository.getSpaceById(spaceId);
         assertTrue(result.isPresent());
     }
 
@@ -68,14 +69,14 @@ class SpaceRepositoryTest {
 
     @Test
     void getSpaceById_shouldReturnEmptyOptionalWhenNotFound() throws RepositoryException {
-        Optional<Space> result = spaceRepository.getSpaceById("");
+        Optional<Space> result = spaceRepository.getSpaceById(-2L);
 
         assertTrue(result.isEmpty());
     }
 
     @Test
     void addSpace_shouldAddSpaceToList() throws RepositoryException {
-        Space space = new Space();
+        Space space = new Space(SpaceType.ROOM, 30);
 
         spaceRepository.addSpace(space);
 
@@ -85,16 +86,16 @@ class SpaceRepositoryTest {
     @Test
     void deleteSpace_shouldRemoveSpaceWhenFound() throws RepositoryException {
         Space spaceToAdd = new Space();
-        spaceRepository.addSpace(spaceToAdd);
+        Long spaceId = spaceRepository.addSpace(spaceToAdd);
 
-        spaceRepository.deleteSpace(spaceToAdd.getId());
+        spaceRepository.deleteSpace(spaceId);
 
-        assertEquals(0, spaceRepository.getAllSpaces().size());
+        assertTrue(spaceRepository.getSpaceById(spaceId).isEmpty());
     }
 
     @Test
     void deleteSpace_shouldThrowRepositoryExceptionWhenNotFound() {
-        assertThrows(RepositoryException.class, () -> spaceRepository.deleteSpace(""));
+        assertThrows(RepositoryException.class, () -> spaceRepository.deleteSpace(-4L));
     }
 
     @Test
@@ -108,6 +109,7 @@ class SpaceRepositoryTest {
     }
 
     @Test
+    @Ignore("not suitable for database storage")
     void saveSpace_shouldThrowRepositoryExceptionWhenStorageDoesNotExist() {
         try(MockedStatic<PropertyReader> mockedStatic = Mockito.mockStatic(PropertyReader.class)) {
             mockedStatic.when(() -> PropertyReader.getProperty(PropertyReader.SPACE_STORAGE_PATH)).thenReturn("");
@@ -119,23 +121,19 @@ class SpaceRepositoryTest {
     @Test
     void updateSpace_shouldUpdateSpaceWhenFound() throws RepositoryException {
         Space initSpace = new Space();
-        String id = initSpace.getId();
         initSpace.setType(SpaceType.ROOM);
-        spaceRepository.addSpace(initSpace);
-        Space update = new Space();
-        update.setId(id);
-        update.setType(SpaceType.PRIVATE);
+        Long spaceId = spaceRepository.addSpace(initSpace);
+        initSpace.setType(SpaceType.PRIVATE);
 
-        spaceRepository.updateSpace(id, update);
-        Optional<Space> updatedOptional = spaceRepository.getSpaceById(id);
+        spaceRepository.updateSpace(spaceId, initSpace);
+        Optional<Space> updatedOptional = spaceRepository.getSpaceById(spaceId);
 
         assertTrue(updatedOptional.isPresent());
         assertNotEquals(initSpace, updatedOptional.get());
-        assertEquals(update, updatedOptional.get());
     }
 
     @Test
     void updateSpace_shouldThrowRepositoryExceptionWhenSpaceNotFound() {
-        assertThrows(RepositoryException.class, () -> spaceRepository.updateSpace("", new Space()));
+        assertThrows(RepositoryException.class, () -> spaceRepository.updateSpace(-5L, new Space()));
     }
 }

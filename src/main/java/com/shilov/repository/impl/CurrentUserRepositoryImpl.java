@@ -1,11 +1,11 @@
 package com.shilov.repository.impl;
 
 import com.shilov.models.User;
-import com.shilov.repository.UserRepository;
+import com.shilov.repository.CurrentUserRepository;
 
 import java.util.Optional;
 
-public class UserRepositoryImpl implements UserRepository {
+public class CurrentUserRepositoryImpl implements CurrentUserRepository {
 
     private User currentUser;
 

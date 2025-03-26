@@ -11,6 +11,7 @@ public class ReservationBuilder {
     private Space space;
     private ReservationStatus status;
     private ReservationDateTime reservationDateTime;
+    private Long id;
 
     public ReservationBuilder setCustomer(User customer) {
         this.customer = customer;
@@ -32,7 +33,12 @@ public class ReservationBuilder {
         return this;
     }
 
+    public ReservationBuilder setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Reservation createReservation() {
-        return new Reservation(customer, space, status, reservationDateTime);
+        return new Reservation(id, customer, space, status, reservationDateTime);
     }
 }

@@ -5,7 +5,7 @@ import com.shilov.models.User;
 
 import java.util.Optional;
 
-public interface UserRepository {
+public interface CurrentUserRepository {
 
     Optional<User> getCurrentUser() throws RepositoryException;
     void setCurrentUser(User user) throws RepositoryException;
