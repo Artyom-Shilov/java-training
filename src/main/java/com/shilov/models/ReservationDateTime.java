@@ -1,6 +1,8 @@
 package com.shilov.models;
 
 import com.shilov.common.exceptions.ReservationDateTimeFormatException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -8,10 +10,15 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
+@Embeddable
 public class ReservationDateTime implements Serializable {
 
+    @Column(name = "start_time")
     private LocalTime startTime;
+
+    @Column(name = "ent_time")
     private LocalTime endTime;
+
     private LocalDate date;
 
     public ReservationDateTime() {}

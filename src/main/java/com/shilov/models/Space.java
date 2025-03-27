@@ -1,14 +1,23 @@
 package com.shilov.models;
 
 import com.shilov.common.enums.SpaceType;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Entity
+@Table(name = "spaces")
 public class Space implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     private SpaceType type;
+
+    @Column(name = "hourly_price")
     private int hourlyPrice;
 
     public Space() {

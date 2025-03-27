@@ -10,7 +10,7 @@ import com.shilov.controllers.ReservationController;
 import com.shilov.controllers.SpaceController;
 import com.shilov.controllers.factory.BaseControllerFactory;
 import com.shilov.controllers.factory.ControllerFactory;
-import com.shilov.controllers.factory.JdbcControllerFactory;
+import com.shilov.controllers.factory.JpaControllerFactory;
 import com.shilov.controllers.responses.Response;
 
 import java.io.File;
@@ -27,7 +27,7 @@ public class MainMenu extends ConsoleOperator {
     private  static final String ENTER_LOGIN_MESSAGE = "Please, enter your login: ";
     private static final MainMenu INSTANCE = new MainMenu();
 
-    private final BaseControllerFactory controllerFactory = JdbcControllerFactory.getInstance();
+    private final BaseControllerFactory controllerFactory = JpaControllerFactory.getInstance();
     private final AuthController authController = controllerFactory.getAuthController();
     private final ReservationController reservationController = controllerFactory
             .getReservationController();

@@ -1,14 +1,24 @@
 package com.shilov.models;
 
 import com.shilov.common.enums.UserRole;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 public class User implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(unique = true)
     private String login;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private UserRole userRole;
 
     public User() {}

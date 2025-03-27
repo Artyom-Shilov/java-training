@@ -1,16 +1,31 @@
 package com.shilov.models;
 
 import com.shilov.common.enums.ReservationStatus;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Entity
+@Table(name = "reservations")
 public class Reservation implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
     private User customer;
+
+    @ManyToOne
+    @JoinColumn(name = "space_id")
     private Space space;
+
+    @Enumerated(EnumType.STRING)
     private ReservationStatus status;
+
+    @Embedded
     private ReservationDateTime reservationDateTime;
 
     public Reservation() {}

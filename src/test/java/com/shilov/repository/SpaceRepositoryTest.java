@@ -5,6 +5,7 @@ import com.shilov.common.exceptions.RepositoryException;
 import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Space;
 import com.shilov.repository.impl.JdbcSpaceRepository;
+import com.shilov.repository.impl.JpaSpaceRepository;
 import org.junit.Assert;
 
 import org.junit.Ignore;
@@ -28,7 +29,7 @@ class SpaceRepositoryTest {
 
     @BeforeEach
     void setUp() throws RepositoryException {
-        spaceRepository = new JdbcSpaceRepository();
+        spaceRepository = new JpaSpaceRepository();
         spaceRepository.deleteAllSpaces();
     }
 
@@ -58,7 +59,6 @@ class SpaceRepositoryTest {
     @MethodSource("provideSpaces")
     void getSpaceById_shouldReturnSpaceWhenFound(Space space) throws RepositoryException {
         Long spaceId = spaceRepository.addSpace(space);
-
         Optional<Space> result = spaceRepository.getSpaceById(spaceId);
         assertTrue(result.isPresent());
     }
@@ -123,13 +123,14 @@ class SpaceRepositoryTest {
         Space initSpace = new Space();
         initSpace.setType(SpaceType.ROOM);
         Long spaceId = spaceRepository.addSpace(initSpace);
+        Space spaceBeforeUpdate = spaceRepository.getSpaceById(spaceId).get();
         initSpace.setType(SpaceType.PRIVATE);
 
         spaceRepository.updateSpace(spaceId, initSpace);
-        Optional<Space> updatedOptional = spaceRepository.getSpaceById(spaceId);
+        Optional<Space> optionalAfterUpdate = spaceRepository.getSpaceById(spaceId);
 
-        assertTrue(updatedOptional.isPresent());
-        assertNotEquals(initSpace, updatedOptional.get());
+        assertTrue(optionalAfterUpdate.isPresent());
+        assertNotEquals(spaceBeforeUpdate, optionalAfterUpdate.get());
     }
 
     @Test

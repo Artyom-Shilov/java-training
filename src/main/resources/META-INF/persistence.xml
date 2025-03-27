@@ -1,0 +1,25 @@
+<persistence version="3.1" xmlns="https://jakarta.ee/xml/ns/persistence">
+    <persistence-unit name="Space Reservation">
+        <properties>
+            <!-- JDBC Config -->
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/java_training"/>
+            <property name="jakarta.persistence.jdbc.user" value="admin"/>
+            <property name="jakarta.persistence.jdbc.password" value="admin"/>
+            <property name="jakarta.persistence.schema-generation.database.action"
+                      value="drop-and-create"/>
+
+            <!-- Hibernate Config -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+            <!-- Connection Pooling -->
+            <property name="hibernate.hikari.minimumIdle" value="5" />
+            <property name="hibernate.hikari.maximumPoolSize" value="10" />
+            <property name="hibernate.hikari.idleTimeout" value="30000" />
+            <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+        </properties>
+    </persistence-unit>
+</persistence>
