@@ -2,19 +2,13 @@ package com.shilov.repository;
 
 import com.shilov.common.enums.SpaceType;
 import com.shilov.common.exceptions.RepositoryException;
-import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Space;
-import com.shilov.repository.impl.JdbcSpaceRepository;
 import com.shilov.repository.impl.JpaSpaceRepository;
-import org.junit.Assert;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -96,26 +90,6 @@ class SpaceRepositoryTest {
     @Test
     void deleteSpace_shouldThrowRepositoryExceptionWhenNotFound() {
         assertThrows(RepositoryException.class, () -> spaceRepository.deleteSpace(-4L));
-    }
-
-    @Test
-    void saveSpace_shouldPersistSpaceWhenStorageExists() throws RepositoryException {
-        spaceRepository.addSpace(new Space());
-
-        spaceRepository.saveSpaces();
-        spaceRepository.loadSpaces();
-
-        assertFalse(spaceRepository.getAllSpaces().isEmpty());
-    }
-
-    @Test
-    @Ignore("not suitable for database storage")
-    void saveSpace_shouldThrowRepositoryExceptionWhenStorageDoesNotExist() {
-        try(MockedStatic<PropertyReader> mockedStatic = Mockito.mockStatic(PropertyReader.class)) {
-            mockedStatic.when(() -> PropertyReader.getProperty(PropertyReader.SPACE_STORAGE_PATH)).thenReturn("");
-
-            Assert.assertThrows(RepositoryException.class, () -> spaceRepository.saveSpaces());
-        }
     }
 
     @Test

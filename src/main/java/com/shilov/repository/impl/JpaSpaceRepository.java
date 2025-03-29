@@ -13,14 +13,14 @@ import java.util.Optional;
 public class JpaSpaceRepository implements SpaceRepository {
 
     @Override
-    public List<Space> getAllSpaces() throws RepositoryException {
+    public List<Space> getAllSpaces() {
         try(EntityManager em = DatabaseConnectionManager.getEntityManager()) {
            return em.createQuery("SELECT s FROM Space s", Space.class).getResultList();
         }
     }
 
     @Override
-    public Optional<Space> getSpaceById(Long id) throws RepositoryException {
+    public Optional<Space> getSpaceById(Long id) {
         try(EntityManager em = DatabaseConnectionManager.getEntityManager()) {
             Space space = em.find(Space.class, id);
             return space != null ? Optional.of(space) : Optional.empty();
@@ -29,12 +29,18 @@ public class JpaSpaceRepository implements SpaceRepository {
 
     @Override
     public Long addSpace(Space space) throws RepositoryException {
+        EntityTransaction transaction = null;
         try(EntityManager em = DatabaseConnectionManager.getEntityManager()) {
-            EntityTransaction transaction = em.getTransaction();
+            transaction = em.getTransaction();
             transaction.begin();
             em.persist(space);
             transaction.commit();
             return space.getId();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RepositoryException(e);
         }
     }
 
@@ -55,8 +61,9 @@ public class JpaSpaceRepository implements SpaceRepository {
 
     @Override
     public void updateSpace(Long id, Space newData) throws RepositoryException {
+        EntityTransaction transaction = null;
         try(EntityManager em = DatabaseConnectionManager.getEntityManager()) {
-            EntityTransaction transaction = em.getTransaction();
+            transaction = em.getTransaction();
             transaction.begin();
             Space space = em.find(Space.class, id);
             if (space != null) {
@@ -64,29 +71,30 @@ public class JpaSpaceRepository implements SpaceRepository {
                 em.merge(newData);
                 transaction.commit();
             } else {
+                transaction.rollback();
                 throw new RepositoryException("Space not found");
             }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RepositoryException(e);
         }
     }
 
     @Override
-    public void loadSpaces() throws RepositoryException {
-        //no need to implement in database case
-    }
-
-    @Override
-    public void saveSpaces() throws RepositoryException {
-        //no need to implement in database case
-
-    }
-
-    @Override
     public void deleteAllSpaces() throws RepositoryException {
+        EntityTransaction transaction = null;
         try(EntityManager em = DatabaseConnectionManager.getEntityManager()) {
-            EntityTransaction transaction = em.getTransaction();
+            transaction = em.getTransaction();
             transaction.begin();
             em.createQuery("DELETE FROM Space").executeUpdate();
             transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RepositoryException(e);
         }
     }
 }

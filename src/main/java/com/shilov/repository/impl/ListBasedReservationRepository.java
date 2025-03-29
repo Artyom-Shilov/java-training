@@ -5,6 +5,7 @@ import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Reservation;
 import com.shilov.models.ReservationDateTime;
 import com.shilov.models.User;
+import com.shilov.repository.Loadable;
 import com.shilov.repository.ReservationRepository;
 
 import java.io.*;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class ListBasedReservationRepository implements ReservationRepository {
+public class ListBasedReservationRepository implements ReservationRepository, Loadable {
 
     private List<Reservation> reservations = new ArrayList<>();
 
@@ -59,7 +60,7 @@ public class ListBasedReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void loadReservations() throws RepositoryException {
+    public void load() throws RepositoryException {
         try (FileInputStream fileInputStream = new FileInputStream(getReservationStoragePath());
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             reservations = (ArrayList<Reservation>) objectInputStream.readObject();
@@ -69,7 +70,7 @@ public class ListBasedReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void saveReservations() throws RepositoryException {
+    public void save() throws RepositoryException {
         try (FileOutputStream fileOutputStream = new FileOutputStream(getReservationStoragePath());
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
             objectOutputStream.writeObject(reservations);

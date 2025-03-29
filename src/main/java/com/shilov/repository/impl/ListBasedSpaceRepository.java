@@ -3,6 +3,7 @@ package com.shilov.repository.impl;
 import com.shilov.common.exceptions.RepositoryException;
 import com.shilov.common.properties.PropertyReader;
 import com.shilov.models.Space;
+import com.shilov.repository.Loadable;
 import com.shilov.repository.SpaceRepository;
 
 import java.io.*;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ListBasedSpaceRepository implements SpaceRepository {
+public class ListBasedSpaceRepository implements SpaceRepository, Loadable {
 
     private List<Space> spaces = new ArrayList<>();
 
@@ -49,7 +50,7 @@ public class ListBasedSpaceRepository implements SpaceRepository {
     }
 
     @Override
-    public void loadSpaces() throws RepositoryException {
+    public void load() throws RepositoryException {
         try (FileInputStream fileInputStream = new FileInputStream(getSpacesStoragePath());
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             spaces = (ArrayList<Space>) objectInputStream.readObject();
@@ -59,7 +60,7 @@ public class ListBasedSpaceRepository implements SpaceRepository {
     }
 
     @Override
-    public void saveSpaces() throws RepositoryException {
+    public void save() throws RepositoryException {
         try (FileOutputStream fileOutputStream = new FileOutputStream(getSpacesStoragePath());
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
             objectOutputStream.writeObject(spaces);
@@ -71,7 +72,7 @@ public class ListBasedSpaceRepository implements SpaceRepository {
     @Override
     public void deleteAllSpaces() throws RepositoryException {
         spaces = new ArrayList<>();
-        saveSpaces();
+        save();
     }
 
     private String getSpacesStoragePath() throws IOException {

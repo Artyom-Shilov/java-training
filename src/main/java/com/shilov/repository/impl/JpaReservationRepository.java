@@ -37,20 +37,27 @@ public class JpaReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Long addReservation(Reservation reservation) {
+    public Long addReservation(Reservation reservation) throws RepositoryException {
+        EntityTransaction transaction = null;
         try(EntityManager em = DatabaseConnectionManager.getEntityManager()) {
-            EntityTransaction transaction = em.getTransaction();
+            transaction = em.getTransaction();
             transaction.begin();
             em.persist(reservation);
             transaction.commit();
             return reservation.getId();
+        } catch (Exception e) {
+            if(transaction != null) {
+                transaction.rollback();
+            }
+            throw new RepositoryException(e);
         }
     }
 
     @Override
     public void updateReservation(Long id, Reservation newData) throws RepositoryException {
+        EntityTransaction transaction = null;
         try(EntityManager em = DatabaseConnectionManager.getEntityManager()) {
-            EntityTransaction transaction = em.getTransaction();
+            transaction = em.getTransaction();
             transaction.begin();
             Reservation reservation = em.find(Reservation.class, id);
             if (reservation != null) {
@@ -58,8 +65,14 @@ public class JpaReservationRepository implements ReservationRepository {
                 em.merge(newData);
                 transaction.commit();
             } else {
+                transaction.rollback();
                 throw new RepositoryException("Reservation not found");
             }
+        } catch (Exception e) {
+            if(transaction != null) {
+                transaction.rollback();
+            }
+            throw new RepositoryException(e);
         }
     }
 
@@ -77,15 +90,5 @@ public class JpaReservationRepository implements ReservationRepository {
                     .setParameter("endLimit", dateTimeForIntersection.getStartTime())
                     .getResultList();
         }
-    }
-
-    @Override
-    public void loadReservations() throws RepositoryException {
-        //no need to implement in database case
-    }
-
-    @Override
-    public void saveReservations() throws RepositoryException {
-        //no need to implement in database case
     }
 }

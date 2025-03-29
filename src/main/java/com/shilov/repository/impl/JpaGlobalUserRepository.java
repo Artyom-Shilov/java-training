@@ -1,6 +1,7 @@
 package com.shilov.repository.impl;
 
 import com.shilov.common.connectivity.DatabaseConnectionManager;
+import com.shilov.common.exceptions.RepositoryException;
 import com.shilov.models.User;
 import com.shilov.repository.GlobalUserRepository;
 import jakarta.persistence.EntityManager;
@@ -12,13 +13,19 @@ import java.util.Optional;
 public class JpaGlobalUserRepository implements GlobalUserRepository {
 
     @Override
-    public Long saveUser(User user) {
-        try(EntityManager em = DatabaseConnectionManager.getEntityManager()) {
-            EntityTransaction transaction = em.getTransaction();
+    public Long saveUser(User user) throws RepositoryException {
+        EntityTransaction transaction = null;
+        try (EntityManager em = DatabaseConnectionManager.getEntityManager()) {
+            transaction = em.getTransaction();
             transaction.begin();
             em.persist(user);
             transaction.commit();
             return user.getId();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RepositoryException(e);
         }
     }
 

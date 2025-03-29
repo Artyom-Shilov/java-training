@@ -9,6 +9,7 @@ import com.shilov.models.ReservationDateTime;
 import com.shilov.models.Space;
 import com.shilov.models.User;
 import com.shilov.models.builders.ReservationBuilder;
+import com.shilov.repository.Loadable;
 import com.shilov.repository.ReservationRepository;
 import com.shilov.services.ReservationService;
 
@@ -98,7 +99,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void saveReservations() throws ServiceException {
         try {
-            reservationRepository.saveReservations();
+            if (reservationRepository instanceof Loadable)
+                ((Loadable) reservationRepository).load();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -107,7 +109,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void initReservations() throws ServiceException {
         try {
-            reservationRepository.loadReservations();
+            if (reservationRepository instanceof Loadable)
+                ((Loadable) reservationRepository).load();
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
