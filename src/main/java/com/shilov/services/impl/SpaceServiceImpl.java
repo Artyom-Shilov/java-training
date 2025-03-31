@@ -6,6 +6,7 @@ import com.shilov.common.exceptions.ServiceException;
 import com.shilov.models.Reservation;
 import com.shilov.models.ReservationDateTime;
 import com.shilov.models.Space;
+import com.shilov.repository.Loadable;
 import com.shilov.repository.ReservationRepository;
 import com.shilov.repository.SpaceRepository;
 import com.shilov.services.SpaceService;
@@ -77,7 +78,9 @@ public class SpaceServiceImpl implements SpaceService {
     @Override
     public void saveSpaces() throws ServiceException {
         try {
-            spaceRepository.saveSpaces();
+            if (spaceRepository instanceof Loadable) {
+                ((Loadable) spaceRepository).save();
+            }
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -86,7 +89,9 @@ public class SpaceServiceImpl implements SpaceService {
     @Override
     public void initSpaces() throws ServiceException {
         try {
-            spaceRepository.loadSpaces();
+            if (spaceRepository instanceof Loadable) {
+                ((Loadable) spaceRepository).load();
+            }
         } catch (RepositoryException e) {
             throw new ServiceException(e);
         }

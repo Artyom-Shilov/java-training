@@ -16,6 +16,4 @@ public interface ReservationRepository {
     Long addReservation(Reservation reservation) throws  RepositoryException;
     void updateReservation(Long id, Reservation newData) throws  RepositoryException;
     List<Reservation> getReservationsIntersectedWithTimeRange(ReservationDateTime dateTimeForIntersection) throws  RepositoryException;
-    void loadReservations() throws RepositoryException;
-    void saveReservations() throws RepositoryException;
 }

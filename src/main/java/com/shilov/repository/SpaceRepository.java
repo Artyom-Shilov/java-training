@@ -13,7 +13,5 @@ public interface SpaceRepository {
     Long addSpace(Space space) throws RepositoryException;
     void deleteSpace(Long id) throws RepositoryException;
     void updateSpace(Long id, Space newData) throws RepositoryException;
-    void loadSpaces() throws RepositoryException;
-    void saveSpaces() throws RepositoryException;
     void deleteAllSpaces() throws RepositoryException;
 }

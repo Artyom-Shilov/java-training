@@ -158,16 +158,6 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     }
 
-    @Override
-    public void loadReservations() {
-        //no need to implement in database case
-    }
-
-    @Override
-    public void saveReservations() {
-        //no need to implement in database case
-    }
-
     private void setReservationStatement(Reservation reservation, PreparedStatement statement) throws SQLException {
         statement.setLong(1, reservation.getCustomer().getId());
         statement.setLong(2, reservation.getSpace().getId());

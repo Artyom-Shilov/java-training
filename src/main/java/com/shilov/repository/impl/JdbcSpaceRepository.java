@@ -107,16 +107,6 @@ public class JdbcSpaceRepository implements SpaceRepository {
     }
 
     @Override
-    public void loadSpaces() {
-        //no need to implement in database case
-    }
-
-    @Override
-    public void saveSpaces() {
-        //no need to implement in database case
-    }
-
-    @Override
     public void deleteAllSpaces() throws RepositoryException {
         String deleteAllSpaces = "DELETE FROM spaces";
         try (Connection connection = DatabaseConnectionManager.getJdbcConnection()) {
